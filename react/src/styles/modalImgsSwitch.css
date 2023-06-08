@@ -1,0 +1,17 @@
+.grid {
+    margin-right: 2rem;
+   
+}
+
+.gridArea {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 20px;
+}
+
+.imgGrid {
+    width: 287px;
+    height: 261px;
+
+
+}
