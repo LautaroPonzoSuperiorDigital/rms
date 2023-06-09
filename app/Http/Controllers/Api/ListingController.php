@@ -5,10 +5,13 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Listing;
 use App\Models\Rent;
+use App\Models\ListingSections;
+use App\Models\SectionPictures;
 use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\Auth;
 // use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -47,24 +50,53 @@ class ListingController extends Controller
         $listing->lot_size = $request->input('lot_size');
         $listing->house_size = $request->input('house_size');
         $listing->price = $request->input('price');
-        $listing->public = $request->input('public');
+        if ($request->input('public') == true) {
+            $listing->public = 1;
+        } else {
+            $listing->public = 0;
+        }
+        //$listing->public = $request->input('public');
         $listing->bedrooms = $request->input('bedrooms');
         $listing->bathrooms = $request->input('bathrooms');
         $listing->amentities = $request->input('amentities');
         $listing->status = 1;
         $listing->created_by = '1'; //check auth
 
-       if ($request->hasFile('images')) {
-            $images = $request->file('images');
-    
-            foreach ($images as $image) {
-                $imagePath = $image->store('public/images');
-                //funcion para guardar las rutas de las imagenes en la bd
-            }
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->storeAs('public/images', uniqid().'.'.$image->extension());
+            $listing->image = $imagePath;
         }
+
         $listing->save();
 
         return response()->json(['listing' => $listing]);
+    }
+
+    public function addSection(Request $request)
+    {
+        $section = new ListingSections;
+        $section->listing_id = $request->input('listing_id');
+        $section->name = $request->input('name');
+
+        $section->save();
+
+        return response()->json(['section' => $section]);
+    }
+
+    public function addPicturesToSection(Request $request)
+    {
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $file) {
+                $galleryImagePath = $file->store('public/images');
+    
+                $sectionPictures = new SectionPictures;
+                $sectionPictures->section_id = $request->input('section_id');
+                $sectionPictures->gallery = $galleryImagePath;
+                $sectionPictures->save();
+            }
+        }    
+        return response()->json(['OK' => 'Upload Success']);
     }
 
 
@@ -118,20 +150,20 @@ class ListingController extends Controller
         return response()->json(['listing' => $listing]);
     }
 
-public function deleteListing($id)
-{
-    $listing = Listing::find($id);
-    if (!$listing) {
-        return response()->json(['error' => 'Listing not found'], 404);
+    public function deleteListing($id)
+    {
+        $listing = Listing::find($id);
+        if (!$listing) {
+            return response()->json(['error' => 'Listing not found'], 404);
+        }
+
+        // Eliminar la imagen de portada y las imágenes de la galería
+
+        $listing->status = 2;
+        $listing->save();
+
+        return response()->json(['message' => 'Listing deleted successfully']);
     }
-
-    // Eliminar la imagen de portada y las imágenes de la galería
-
-    $listing->status = 2;
-    $listing->save();
-
-    return response()->json(['message' => 'Listing deleted successfully']);
-}
     
     public function recoverListing($id)
     {
@@ -168,12 +200,6 @@ public function deleteListing($id)
     public function showListings()
     {
         $listings = Listing::where('status', 1)->get();
-
-        return response()->json(['listings' => $listings], 200);
-    }
-    public function publicListings()
-    {
-         $listings = Listing::where([['status',  1],['public',  1]])->get();
 
         return response()->json(['listings' => $listings], 200);
     }
