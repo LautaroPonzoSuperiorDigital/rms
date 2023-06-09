@@ -54,12 +54,14 @@ class ListingController extends Controller
         $listing->status = 1;
         $listing->created_by = '1'; //check auth
 
-        // if ($request->hasFile('image')) {
-        //     $image = $request->file('image');
-        //     $imagePath = $image->store('public/images');
-        //     $listing->image = $imagePath;
-        // }
-
+       if ($request->hasFile('images')) {
+            $images = $request->file('images');
+    
+            foreach ($images as $image) {
+                $imagePath = $image->store('public/images');
+                //funcion para guardar las rutas de las imagenes en la bd
+            }
+        }
         $listing->save();
 
         return response()->json(['listing' => $listing]);
@@ -116,20 +118,20 @@ class ListingController extends Controller
         return response()->json(['listing' => $listing]);
     }
 
-    public function deleteListing($id)
-    {
-        $listing = Listing::find($id);
-        if (!$listing) {
-            return response()->json(['error' => 'Listing not found'], 404);
-        }
-
-        // Eliminar la imagen de portada y las imágenes de la galería
-
-        $listing->status = 2;
-        $listing->save();
-
-        return response()->json(['message' => 'Listing deleted successfully']);
+public function deleteListing($id)
+{
+    $listing = Listing::find($id);
+    if (!$listing) {
+        return response()->json(['error' => 'Listing not found'], 404);
     }
+
+    // Eliminar la imagen de portada y las imágenes de la galería
+
+    $listing->status = 2;
+    $listing->save();
+
+    return response()->json(['message' => 'Listing deleted successfully']);
+}
     
     public function recoverListing($id)
     {
@@ -166,6 +168,12 @@ class ListingController extends Controller
     public function showListings()
     {
         $listings = Listing::where('status', 1)->get();
+
+        return response()->json(['listings' => $listings], 200);
+    }
+    public function publicListings()
+    {
+         $listings = Listing::where([['status',  1],['public',  1]])->get();
 
         return response()->json(['listings' => $listings], 200);
     }

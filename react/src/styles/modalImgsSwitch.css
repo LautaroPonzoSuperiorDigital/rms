@@ -1,17 +1,15 @@
-.grid {
-    margin-right: 2rem;
-   
+.flex {
+    height: 30rem ;
+    width: 100%;
 }
 
-.gridArea {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-gap: 20px;
+.imgFlex {
+    width: 100%;
+    margin-left: 0;
 }
 
-.imgGrid {
-    width: 287px;
-    height: 261px;
-
-
+.flex-area {
+    height: 30%;
+    width: 15%;
+    margin: 3rem 1rem 0 4rem;
 }

@@ -5,6 +5,7 @@
 
 .logoNav {
   width: 80%;
+  cursor: pointer;
 }
 li {
   width: 20%;

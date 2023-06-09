@@ -15,7 +15,6 @@ import Search from "./Search";
 import Pagination from "./Paginations";
 import "../styles/modal.css";
 
-
 const Tenant = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editTenant, setEditTenant] = useState(null);

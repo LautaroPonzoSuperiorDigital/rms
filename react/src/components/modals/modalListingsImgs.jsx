@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import arrow from "../../assets/img/arrow.svg";
 import closeListing2 from "../../assets/img/close.svg";
+import { useNavigate } from "react-router-dom";
+import del from "../../assets/img/Delete.svg";
+import delHover from "../../assets/img/DeleteIconHover.svg";
 import img1 from "../../assets/img/1.jpg";
 import img2 from "../../assets/img/2.jpg";
 import img3 from "../../assets/img/3.jpg";
@@ -19,30 +22,35 @@ import "../../styles/modalImgsSwitch.css";
 
 const ModalListingsImgs = ({ closeModal }) => {
   const [activeSection, setActiveSection] = useState("EXTERIOR");
+  const navigate = useNavigate();
 
   const handleSectionClick = (section) => {
     setActiveSection(section);
+  };
+  const handleCloseModal = () => {
+    closeModal();
+    navigate("/listingsAdmin");
   };
 
   const renderSectionContent = () => {
     switch (activeSection) {
       case "EXTERIOR":
         return (
-          <div className="grid">
-            <div className="grid-area">
-              <img className="imgGrid" src={img1} alt="imgGrid" />
-              <img className="imgGrid grid-area" src={img2} alt="imgGrid" />
-              <img className="imgGrid grid-area" src={img3} alt="imgGrid" />
-              <img className="imgGrid grid-area" src={img4} alt="imgGrid" />
-              <img className="imgGrid grid-area" src={img5} alt="imgGrid" />
-              <img className="imgGrid grid-area" src={img6} alt="imgGrid" />
-              <img className="imgGrid grid-area" src={img7} alt="imgGrid" />
-              <img className="imgGrid grid-area" src={img8} alt="imgGrid" />
-              <img className="imgGrid grid-area" src={img9} alt="imgGrid" />
-              <img className="imgGrid grid-area" src={img10} alt="imgGrid" />
-              <img className="imgGrid grid-area" src={img11} alt="imgGrid" />
-              <img className="imgGrid grid-area" src={img12} alt="imgGrid" />
-              <img className="imgGrid grid-area" src={img13} alt="imgGrid" />
+          <div className="flex d-flex align-items-start justify-content-start">
+            <div className="imgFlex d-flex flex-wrap justify-content-start">
+              <img className="flex-area" src={img1} />
+              <img className="flex-area" src={img2} />
+              <img className="flex-area" src={img3} />
+              <img className="flex-area" src={img4} />
+              <img className="flex-area" src={img5} />
+              <img className="flex-area" src={img6} />
+              <img className="flex-area" src={img7} />
+              <img className="flex-area" src={img8} />
+              <img className="flex-area" src={img9} />
+              <img className="flex-area" src={img10} />
+              <img className="flex-area" src={img11} />
+              <img className="flex-area" src={img12} />
+              <img className="flex-area" src={img13} />
             </div>
           </div>
         );

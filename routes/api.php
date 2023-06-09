@@ -22,6 +22,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::namespace('App\Http\Controllers\Api')->group(function () {
     Route::get('show-listings', 'ListingController@showListings');
+    Route::get('public-listings', 'ListingController@publicListings');
     Route::get('show-listing/{id}', 'ListingController@showListing');
     Route::get('show-deleted-listings', 'ListingController@showDeletedListings');
     Route::post('add-listing', 'ListingController@addListing');

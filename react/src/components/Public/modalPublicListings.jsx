@@ -20,8 +20,8 @@ const ModalPublicListings = ({ selectedImage, onCloseModal }) => {
   };
 
   const handleBackToSearch = () => {
-    window.location.href = window.location.href; // Redirigir a la URL actual
-    onCloseModal(); // Cerrar el modal llamando a onCloseModal
+    window.location.href = window.location.href; 
+    onCloseModal(); 
   };
 
   return (
