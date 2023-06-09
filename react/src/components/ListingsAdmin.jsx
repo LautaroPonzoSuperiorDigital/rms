@@ -29,11 +29,11 @@ const ListingsAdmin = () => {
   });
 
   const handleAddListing = () => {
-    setShowModal(true); 
+    setShowModal(true);
   };
 
   const handleModalClose = () => {
-    setShowModal(false); 
+    setShowModal(false);
   };
   const PAGE_SIZE = 10;
   const totalListings = listings.length;
@@ -57,13 +57,30 @@ const ListingsAdmin = () => {
     console.log("Editar listado con índice:", index);
   };
 
-  const handleDelete = (listingId) => {
-    const updatedListings = listings.filter(
-      (listing) => listing.id !== listingId
-    );
-    setListings(updatedListings);
+  const deleteListing = (listingId) => {
+    fetch(`http://localhost:8000/api/delete-listing/${listingId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to delete listing");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data.message);
+        const updatedListings = listings.filter(
+          (listing) => listing.id !== listingId
+        );
+        setListings(updatedListings);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
-
   const handleCheckBoxChange = () => {
     setShowOnlyPublicListings(!showOnlyPublicListings);
   };
@@ -210,7 +227,7 @@ const ListingsAdmin = () => {
                           hoverImage={
                             <img src={DeleteIconHover} alt="DeleteIconHover" />
                           }
-                          onClick={() => handleDelete(listing.id)}
+                          onClick={() => deleteListing(listing.id)}
                         />
                       </td>
                     </tr>

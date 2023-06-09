@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/publIcListings/publicListings.css";
 import Logo from "../../assets/img/Logo.svg";
 import bath from "../../assets/img/bath.svg";
@@ -18,6 +19,13 @@ const PublicListings = () => {
   const [isInputHovered, setIsInputHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [listings, setListings] = useState([]);
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate("/publicListings");
+    setIsModalOpen(false);
+  };
 
   const handleImageClick = (image) => {
     setSelectedImage(image);
@@ -45,6 +53,16 @@ const PublicListings = () => {
     setIsModalOpen(false);
   };
 
+  useEffect(() => {
+    fetch("http://localhost:8000/api/public-listings")
+      .then((response) => response.json())
+      .then((data) => {
+        setListings(data.listings);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
   return (
     <div className=" containerPublic w-100">
       <div
@@ -55,6 +73,7 @@ const PublicListings = () => {
             className="LogoPublic justify-content-start ms-4"
             src={Logo}
             alt="Logo"
+            onClick={handleLogoClick}
           />
           <form method="GET">
             <input
@@ -101,426 +120,63 @@ const PublicListings = () => {
         </div>
       </div>
       <div className="containerImgs">
-        <div className="item1">
-          <img
-            className="imgPublic"
-            src={picture1}
-            onClick={() => handleImageClick(picture1)}
-          />
-
-          <div className="description d-flex col">
-            <div className="spects d-flex flex-column justify-content-center align-items-start">
-              <p className="publicPrice">
-                $ 6,500 <span className="strong">per month</span>
-              </p>
-              <p className="spect">
-                HOUSE <span className="strong">3,435 SQ. FT.</span>
-              </p>
-              <p className="spect">
-                LOT <span className="strong">13,608 SQ. FT.</span>
-              </p>
-            </div>
-            <div className="spects2">
-              <p className="spectText d-flex justify-content-end">
-                Paso Robles, Ca
-              </p>
-              <div className="icons1 d-flex justify-content-end">
-                <span className="nbedbath">2</span>
-                <img className="bed" src={bed} />
-                <span className="nbedbath">3</span>
-                <img className="bath" src={bath} />
+        {listings.map((listing) => (
+          <div className="item1">
+            <img
+              className="imgPublic"
+              src={picture1}
+              onClick={() => handleImageClick(picture1)}
+            />
+            <div className="description d-flex col">
+              <div className="spects d-flex flex-column justify-content-center align-items-start">
+                <p className="publicPrice price">
+                ${listing.price
+                    ? parseFloat(listing.price).toLocaleString("en", {
+                        useGrouping: true,
+                      })
+                    : ""}
+                  <span className="strong"> per month</span>
+                </p>
+                <p className="spect house_size">
+                  HOUSE{" "}
+                  <span className="strong">
+                    {listing.house_size
+                      ? listing.house_size.toLocaleString("EN", {
+                          maximumFractionDigits: 0,
+                        })
+                      : ""}
+                  </span>
+                </p>
+                <p className="spect lot_size">
+                  LOT{" "}
+                  <span className="strong">
+                    {listing.lot_size
+                      ? listing.lot_size.toLocaleString("EN", {
+                          maximumFractionDigits: 0,
+                        })
+                      : ""}
+                  </span>
+                </p>
               </div>
-              <p className="listingNumber d-flex justify-content-end mt-2">
-                # 46780
-              </p>
+              <div className="spects2">
+                <p className="spectText d-flex justify-content-end location mt-3">
+                  {listing.location}
+                </p>
+                <div className="icons1 d-flex justify-content-end">
+                  <span className="nbedbath">{listing.bedrooms}</span>
+                  <img className="bed bedrooms" src={bed} />
+                  <span className="nbedbath bathrooms">
+                    {listing.bathrooms}
+                  </span>
+                  <img className="bath" src={bath} />
+                </div>
+                <p className="listingNumber d-flex justify-content-end mt-2 id">
+                  # {listing.id}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="item1">
-          <img
-            className="imgPublic"
-            src={picture2}
-            onClick={() => handleImageClick(picture2)}
-          />
-
-          <div className="description d-flex col">
-            <div className="spects d-flex flex-column justify-content-center align-items-start">
-              <p className="publicPrice">
-                $ 6,500 <span className="strong">per month</span>
-              </p>
-              <p className="spect">
-                HOUSE <span className="strong">3,435 SQ. FT.</span>
-              </p>
-              <p className="spect">
-                LOT <span className="strong">13,608 SQ. FT.</span>
-              </p>
-            </div>
-            <div className="spects2">
-              <p className="spectText d-flex justify-content-end">
-                Paso Robles, Ca
-              </p>
-              <div className="icons1 d-flex justify-content-end">
-                <span className="nbedbath">2</span>
-                <img className="bed" src={bed} />
-                <span className="nbedbath">3</span>
-                <img className="bath" src={bath} />
-              </div>
-              <p className="listingNumber d-flex justify-content-end mt-2">
-                # 46780
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="item1">
-          <img
-            className="imgPublic"
-            src={picture3}
-            onClick={() => handleImageClick(picture3)}
-          />
-
-          <div className="description d-flex col">
-            <div className="spects d-flex flex-column justify-content-center align-items-start">
-              <p className="publicPrice">
-                $ 6,500 <span className="strong">per month</span>
-              </p>
-              <p className="spect">
-                HOUSE <span className="strong">3,435 SQ. FT.</span>
-              </p>
-              <p className="spect">
-                LOT <span className="strong">13,608 SQ. FT.</span>
-              </p>
-            </div>
-            <div className="spects2">
-              <p className="spectText d-flex justify-content-end">
-                Paso Robles, Ca
-              </p>
-              <div className="icons1 d-flex justify-content-end">
-                <span className="nbedbath">2</span>
-                <img className="bed" src={bed} />
-                <span className="nbedbath">3</span>
-                <img className="bath" src={bath} />
-              </div>
-              <p className="listingNumber d-flex justify-content-end mt-2">
-                # 46780
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="item1">
-          <img
-            className="imgPublic"
-            src={picture4}
-            onClick={() => handleImageClick(picture4)}
-          />
-
-          <div className="description d-flex col">
-            <div className="spects d-flex flex-column justify-content-center align-items-start">
-              <p className="publicPrice">
-                $ 6,500 <span className="strong">per month</span>
-              </p>
-              <p className="spect">
-                HOUSE <span className="strong">3,435 SQ. FT.</span>
-              </p>
-              <p className="spect">
-                LOT <span className="strong">13,608 SQ. FT.</span>
-              </p>
-            </div>
-            <div className="spects2">
-              <p className="spectText d-flex justify-content-end">
-                Paso Robles, Ca
-              </p>
-              <div className="icons1 d-flex justify-content-end">
-                <span className="nbedbath">2</span>
-                <img className="bed" src={bed} />
-                <span className="nbedbath">3</span>
-                <img className="bath" src={bath} />
-              </div>
-              <p className="listingNumber d-flex justify-content-end mt-2">
-                # 46780
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="item1">
-          <img
-            className="imgPublic"
-            src={picture5}
-            onClick={() => handleImageClick(picture5)}
-          />
-
-          <div className="description d-flex col">
-            <div className="spects d-flex flex-column justify-content-center align-items-start">
-              <p className="publicPrice">
-                $ 6,500 <span className="strong">per month</span>
-              </p>
-              <p className="spect">
-                HOUSE <span className="strong">3,435 SQ. FT.</span>
-              </p>
-              <p className="spect">
-                LOT <span className="strong">13,608 SQ. FT.</span>
-              </p>
-            </div>
-            <div className="spects2">
-              <p className="spectText d-flex justify-content-end">
-                Paso Robles, Ca
-              </p>
-              <div className="icons1 d-flex justify-content-end">
-                <span className="nbedbath">2</span>
-                <img className="bed" src={bed} />
-                <span className="nbedbath">3</span>
-                <img className="bath" src={bath} />
-              </div>
-              <p className="listingNumber d-flex justify-content-end mt-2">
-                # 46780
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="item1">
-          <img
-            className="imgPublic"
-            src={picture6}
-            onClick={() => handleImageClick(picture6)}
-          />
-
-          <div className="description d-flex col">
-            <div className="spects d-flex flex-column justify-content-center align-items-start">
-              <p className="publicPrice">
-                $ 6,500 <span className="strong">per month</span>
-              </p>
-              <p className="spect">
-                HOUSE <span className="strong">3,435 SQ. FT.</span>
-              </p>
-              <p className="spect">
-                LOT <span className="strong">13,608 SQ. FT.</span>
-              </p>
-            </div>
-            <div className="spects2">
-              <p className="spectText d-flex justify-content-end">
-                Paso Robles, Ca
-              </p>
-              <div className="icons1 d-flex justify-content-end">
-                <span className="nbedbath">2</span>
-                <img className="bed" src={bed} />
-                <span className="nbedbath">3</span>
-                <img className="bath" src={bath} />
-              </div>
-              <p className="listingNumber d-flex justify-content-end mt-2">
-                # 46780
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="item1">
-          <img
-            className="imgPublic"
-            src={picture2}
-            onClick={() => handleImageClick(picture2)}
-          />
-
-          <div className="description d-flex col">
-            <div className="spects d-flex flex-column justify-content-center align-items-start">
-              <p className="publicPrice">
-                $ 6,500 <span className="strong">per month</span>
-              </p>
-              <p className="spect">
-                HOUSE <span className="strong">3,435 SQ. FT.</span>
-              </p>
-              <p className="spect">
-                LOT <span className="strong">13,608 SQ. FT.</span>
-              </p>
-            </div>
-            <div className="spects2">
-              <p className="spectText d-flex justify-content-end">
-                Paso Robles, Ca
-              </p>
-              <div className="icons1 d-flex justify-content-end">
-                <span className="nbedbath">2</span>
-                <img className="bed" src={bed} />
-                <span className="nbedbath">3</span>
-                <img className="bath" src={bath} />
-              </div>
-              <p className="listingNumber d-flex justify-content-end mt-2">
-                # 46780
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="item1">
-          <img
-            className="imgPublic"
-            src={picture1}
-            onClick={() => handleImageClick(picture1)}
-          />
-
-          <div className="description d-flex col">
-            <div className="spects d-flex flex-column justify-content-center align-items-start">
-              <p className="publicPrice">
-                $ 6,500 <span className="strong">per month</span>
-              </p>
-              <p className="spect">
-                HOUSE <span className="strong">3,435 SQ. FT.</span>
-              </p>
-              <p className="spect">
-                LOT <span className="strong">13,608 SQ. FT.</span>
-              </p>
-            </div>
-            <div className="spects2">
-              <p className="spectText d-flex justify-content-end">
-                Paso Robles, Ca
-              </p>
-              <div className="icons1 d-flex justify-content-end">
-                <span className="nbedbath">2</span>
-                <img className="bed" src={bed} />
-                <span className="nbedbath">3</span>
-                <img className="bath" src={bath} />
-              </div>
-              <p className="listingNumber d-flex justify-content-end mt-2">
-                # 46780
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="item1">
-          <img
-            className="imgPublic"
-            src={picture4}
-            onClick={() => handleImageClick(picture4)}
-          />
-
-          <div className="description d-flex col">
-            <div className="spects d-flex flex-column justify-content-center align-items-start">
-              <p className="publicPrice">
-                $ 6,500 <span className="strong">per month</span>
-              </p>
-              <p className="spect">
-                HOUSE <span className="strong">3,435 SQ. FT.</span>
-              </p>
-              <p className="spect">
-                LOT <span className="strong">13,608 SQ. FT.</span>
-              </p>
-            </div>
-            <div className="spects2">
-              <p className="spectText d-flex justify-content-end">
-                Paso Robles, Ca
-              </p>
-              <div className="icons1 d-flex justify-content-end">
-                <span className="nbedbath">2</span>
-                <img className="bed" src={bed} />
-                <span className="nbedbath">3</span>
-                <img className="bath" src={bath} />
-              </div>
-              <p className="listingNumber d-flex justify-content-end mt-2">
-                # 46780
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="item1">
-          <img
-            className="imgPublic"
-            src={picture5}
-            onClick={() => handleImageClick(picture5)}
-          />
-
-          <div className="description d-flex col">
-            <div className="spects d-flex flex-column justify-content-center align-items-start">
-              <p className="publicPrice">
-                $ 6,500 <span className="strong">per month</span>
-              </p>
-              <p className="spect">
-                HOUSE <span className="strong">3,435 SQ. FT.</span>
-              </p>
-              <p className="spect">
-                LOT <span className="strong">13,608 SQ. FT.</span>
-              </p>
-            </div>
-            <div className="spects2">
-              <p className="spectText d-flex justify-content-end">
-                Paso Robles, Ca
-              </p>
-              <div className="icons1 d-flex justify-content-end">
-                <span className="nbedbath">2</span>
-                <img className="bed" src={bed} />
-                <span className="nbedbath">3</span>
-                <img className="bath" src={bath} />
-              </div>
-              <p className="listingNumber d-flex justify-content-end mt-2">
-                # 46780
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="item1">
-          <img
-            className="imgPublic"
-            src={picture3}
-            onClick={() => handleImageClick(picture3)}
-          />
-
-          <div className="description d-flex col">
-            <div className="spects d-flex flex-column justify-content-center align-items-start">
-              <p className="publicPrice">
-                $ 6,500 <span className="strong">per month</span>
-              </p>
-              <p className="spect">
-                HOUSE <span className="strong">3,435 SQ. FT.</span>
-              </p>
-              <p className="spect">
-                LOT <span className="strong">13,608 SQ. FT.</span>
-              </p>
-            </div>
-            <div className="spects2">
-              <p className="spectText d-flex justify-content-end">
-                Paso Robles, Ca
-              </p>
-              <div className="icons1 d-flex justify-content-end">
-                <span className="nbedbath">2</span>
-                <img className="bed" src={bed} />
-                <span className="nbedbath">3</span>
-                <img className="bath" src={bath} />
-              </div>
-              <p className="listingNumber d-flex justify-content-end mt-2">
-                # 46780
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="item1">
-          <img
-            className="imgPublic"
-            src={picture6}
-            onClick={() => handleImageClick(picture6)}
-          />
-
-          <div className="description d-flex col">
-            <div className="spects d-flex flex-column justify-content-center align-items-start">
-              <p className="publicPrice">
-                $ 6,500 <span className="strong">per month</span>
-              </p>
-              <p className="spect">
-                HOUSE <span className="strong">3,435 SQ. FT.</span>
-              </p>
-              <p className="spect">
-                LOT <span className="strong">13,608 SQ. FT.</span>
-              </p>
-            </div>
-            <div className="spects2">
-              <p className="spectText d-flex justify-content-end">
-                Paso Robles, Ca
-              </p>
-              <div className="icons1 d-flex justify-content-end">
-                <span className="nbedbath">2</span>
-                <img className="bed" src={bed} />
-                <span className="nbedbath">3</span>
-                <img className="bath" src={bath} />
-              </div>
-              <p className="listingNumber d-flex justify-content-end mt-2">
-                # 46780
-              </p>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
       {isModalOpen && (
         <ModalPublicListings
